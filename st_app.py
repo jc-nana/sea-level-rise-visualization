@@ -14,9 +14,7 @@ ee.Initialize(project=st.secrets["EARTHENGINE_PROJECT"])
 
 # create map centered on maldives capital with street level zoom
 m = geemap.Map(center=(22.30, 114.1694), zoom=14, basemap="HYBRID")
-# m.add_basemap("HYBRID")
 dem = ee.Image("NASA/NASADEM_HGT/001")
-# impacted_land = dem.select("elevation").lt(0.3)
 impacted_land = dem.expression(
     "(elevation < 0.3) && (swb == 0)",
     {
