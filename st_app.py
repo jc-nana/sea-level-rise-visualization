@@ -8,9 +8,9 @@ import ee
 from streamlit_folium import folium_static
 
 st.write("""# Land Impacted by Rising Sea Level highlighted in red""")
-
-ee.Authenticate()
-ee.Initialize(project=st.secrets["project_id"])
+ee.Initialize(ee.ServiceAccountCredentials(
+    st.secrets.gee_service_account,
+    key_data=st.secrets.gee_service_account_credentials))
 
 # create map centered on maldives capital with street level zoom
 m = geemap.Map(center=(22.30, 114.1694), zoom=14, basemap="HYBRID")
