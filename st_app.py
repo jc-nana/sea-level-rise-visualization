@@ -7,7 +7,7 @@ import geemap.foliumap as geemap
 import ee
 from streamlit_folium import folium_static
 
-st.write("# Land Impacted by Rising Sea Level highlighted in red")
+st.write("# Rising Sea Level impact (2050) on lands in red")
 ee.Initialize(ee.ServiceAccountCredentials(
     st.secrets.gee_service_account,
     key_data=st.secrets.gee_service_account_credentials))
