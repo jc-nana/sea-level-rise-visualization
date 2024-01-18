@@ -7,7 +7,7 @@ import geemap.foliumap as geemap
 import ee
 from streamlit_folium import folium_static
 
-st.set_page_config(page_title="🤖 8 lines code demo", page_icon="🤖")
+st.set_page_config(page_title="8 lines code demo", page_icon="🤖")
 
 st.write("# Rising Sea Level impact (2050) on lands in red")
 

@@ -8,7 +8,7 @@ import ee
 from streamlit_folium import folium_static
 from utils import create_sea_level_interactive_plot
 
-st.set_page_config(page_title="🌏 Rising Sea Level")
+st.set_page_config(page_title="Rising Sea Level", page_icon="🌏")
 
 st.write("# Rising Sea Level impact (2050) on lands in red")
 
