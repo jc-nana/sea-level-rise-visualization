@@ -1,5 +1,6 @@
+"""Contains functions for creating interactive plots of sea level rise data."""
+
 import plotly.graph_objs as go
-# from plotly.offline import iplot
 import pandas as pd
 
 
@@ -63,10 +64,4 @@ def create_sea_level_interactive_plot():
     # Create the figure with data and layout
     fig = go.Figure(data=data_plots, layout=layout)
 
-    # # Show the figure
-    # iplot(fig)
     return fig
-
-# Note: If you are using a Jupyter Notebook, make sure to include the following to enable Plotly offline:
-# from plotly.offline import init_notebook_mode
-# init_notebook_mode(connected=True)
