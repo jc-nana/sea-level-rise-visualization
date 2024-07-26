@@ -1,4 +1,4 @@
-geemap
+geemap==0.30.3
 streamlit
 ee
 streamlit_folium
