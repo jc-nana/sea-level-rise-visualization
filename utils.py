@@ -1,4 +1,9 @@
-"""Contains functions for creating interactive plots of sea level rise data."""
+"""
+Contains functions for creating interactive plots of sea level rise data.
+"""
+
+import json
+from typing import Tuple
 
 import plotly.graph_objs as go
 import pandas as pd
@@ -31,7 +36,7 @@ def create_sea_level_interactive_plot():
         y=data['GMSL_smoothed'],
         mode='lines',
         name='Smoothed GMSL',
-        line=dict(color='white', width=2)  # Black line with thickness of 2
+        line=dict(color='white', width=2)  # White line with thickness of 2
     )
 
     # Highlight the last point with a red dot
@@ -55,7 +60,6 @@ def create_sea_level_interactive_plot():
                'x': 0.5, 'xanchor': 'center'},
         xaxis=dict(title='Year'),
         yaxis=dict(title='GMSL Variation (mm)'),
-        # Position the legend in the upper left corner
         legend=dict(x=0.05, y=0.95),
         margin=dict(l=50, r=50, t=50, b=50),  # Set plot margins
         hovermode='closest',  # Show closest data point on hover
@@ -65,3 +69,44 @@ def create_sea_level_interactive_plot():
     fig = go.Figure(data=data_plots, layout=layout)
 
     return fig
+
+
+# --- New helper: validate GEE service account key ---
+def validate_gee_service_account_key(key_data) -> Tuple[bool, str]:
+    """
+    Validates a Google service account key JSON.
+
+    Accepts either:
+    - a dict (parsed JSON), or
+    - a JSON string.
+
+    Returns:
+    - (True, "") if valid,
+    - (False, "<error message>") if invalid.
+
+    The function checks that the JSON contains required fields for a
+    service account key and that the "type" is "service_account".
+    """
+    try:
+        if isinstance(key_data, dict):
+            data = key_data
+        elif isinstance(key_data, str):
+            data = json.loads(key_data)
+        else:
+            return False, "Service account credentials must be a dict or a JSON string."
+    except json.JSONDecodeError as e:
+        return False, f"Invalid JSON for service account credentials: {e}"
+
+    required_fields = {"type", "project_id", "private_key_id", "private_key", "client_email", "client_id"}
+    missing = sorted(required_fields - set(data.keys()))
+    if missing:
+        return False, "Missing required fields in service account JSON: " + ", ".join(missing)
+
+    if data.get("type") != "service_account":
+        return False, "The JSON 'type' field is not 'service_account'."
+
+    # Basic sanity for private_key
+    if not isinstance(data.get("private_key"), str) or "-----BEGIN PRIVATE KEY-----" not in data.get("private_key"):
+        return False, "Invalid or missing 'private_key' in service account JSON."
+
+    return True, ""
