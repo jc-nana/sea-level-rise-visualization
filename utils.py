@@ -110,3 +110,48 @@ def validate_gee_service_account_key(key_data) -> Tuple[bool, str]:
         return False, "Invalid or missing 'private_key' in service account JSON."
 
     return True, ""
+
+
+def initialize_earth_engine(st_module):
+    """
+    Initialize Google Earth Engine with validation and error handling.
+
+    Args:
+        st_module: The streamlit module (passed to avoid circular imports)
+    """
+    import ee
+
+    try:
+        sa_key_name = "gee_service_account"
+        sa_key_data_name = "gee_service_account_credentials"
+
+        if sa_key_name in st_module.secrets and sa_key_data_name in st_module.secrets:
+            service_account = st_module.secrets[sa_key_name]
+            key_data = st_module.secrets[sa_key_data_name]
+
+            is_valid, err = validate_gee_service_account_key(key_data)
+            if not is_valid:
+                st_module.error("Invalid Google Earth Engine service account credentials.")
+                st_module.write("Validation error: " + err)
+                st_module.stop()
+
+            if isinstance(key_data, dict):
+                key_json = json.dumps(key_data)
+            else:
+                key_json = str(key_data)
+
+            creds = ee.ServiceAccountCredentials(service_account, key_data=key_json)
+            ee.Initialize(creds)
+        else:
+            ee.Initialize()
+    except Exception as e:
+        st_module.error("Failed to initialize Google Earth Engine (ee).")
+        st_module.markdown(
+            "Possible causes:\n"
+            "- Missing or invalid Streamlit secrets `gee_service_account` and/or "
+            "`gee_service_account_credentials` for service account initialization.\n"
+            "- No local Earth Engine authentication (run `earthengine authenticate`).\n\n"
+            "See https://developers.google.com/earth-engine/python_install for setup instructions."
+        )
+        st_module.write(f"Error details: `{e}`")
+        st_module.stop()

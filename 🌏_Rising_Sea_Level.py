@@ -6,15 +6,13 @@ import streamlit as st
 import geemap.foliumap as geemap
 import ee
 from streamlit_folium import folium_static
-from utils import create_sea_level_interactive_plot
+from utils import create_sea_level_interactive_plot, initialize_earth_engine
 
 st.set_page_config(page_title="Rising Sea Level", page_icon="🌏")
 
 st.write("# Rising Sea Level impact (2050) on lands in red")
 
-ee.Initialize(ee.ServiceAccountCredentials(
-    st.secrets.gee_service_account,
-    key_data=st.secrets.gee_service_account_credentials))
+initialize_earth_engine(st)
 
 rise = st.slider("sea level rise (m)", 0.2, 5., value=0.3)
 
