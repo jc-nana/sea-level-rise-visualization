@@ -49,4 +49,3 @@ m.addLayerControl()
 
 # render folium map
 folium_static(m)
-"""
