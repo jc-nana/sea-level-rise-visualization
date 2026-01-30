@@ -17,7 +17,7 @@ initialize_earth_engine(st)
 rise = st.slider("sea level rise (m)", 0.2, 5., value=0.3)
 
 # create map centered on maldives capital with street level zoom
-m = geemap.Map(center=(22.30, 114.1694), zoom=14, basemap="HYBRID")
+m = geemap.Map(center=(22.30, 114.1694), zoom=14, basemap="HYBRID", ee_initialize=False)
 dem = ee.Image("NASA/NASADEM_HGT/001")
 impacted_land = dem.expression(
     f"(elevation < {rise}) && (swb == 0)",

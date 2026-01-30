@@ -34,7 +34,7 @@ st.code(DEMO_CODE, language="python", line_numbers=False)
 initialize_earth_engine(st)
 
 # create map centered on hong kong with district level zoom
-m = geemap.Map(center=(22.30, 114.1694), zoom=14, basemap="HYBRID")
+m = geemap.Map(center=(22.30, 114.1694), zoom=14, basemap="HYBRID", ee_initialize=False)
 dem = ee.Image("NASA/NASADEM_HGT/001")
 impacted_land = dem.expression(
     "(elevation < 0.3) && (swb == 0)",
